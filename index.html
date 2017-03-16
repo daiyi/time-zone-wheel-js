@@ -1,0 +1,44 @@
+<html>
+<head>
+  <meta charset="UTF-8">
+  <script language="javascript" type="text/javascript" src="timezones.js"></script>
+  <link rel="stylesheet" href="main.css"></link>
+  <title>timezone converter wheel</title>
+</head>
+
+<body>
+  <div id="page">
+    <p><em>use arrow keys to spin the wheel of time.</em></p>
+    <p>
+      a more visual way of doing timezone conversions <br />
+      and mess around for a time when everyone is awake.</p>
+    <p style="color: #888">help wanted: a less miserable way to manipulate svg with js</p>
+
+    <div id="wheel-box">
+      <svg viewBox="-300 -300 600 600">
+        <defs>
+          <mask id="doughnut">
+            <circle cx="0"
+                    cy="0"
+                    r="130"
+                    stroke="white" stroke-width="100"></circle>
+          </mask>
+        </defs>
+        <!-- <g id="wheel"> -->
+        <g id="wheel" mask="url(#doughnut)">
+          <!-- <path d="M 200 0
+                  A 200 200, 0, 0, 1, 373.2 100
+                  L 200 200
+                  Z"
+               fill="#27e10e"></path> -->
+
+          <!-- <path d="M 0 200 L 0 0 Z"></path>
+          <path d="M 200 0 L 0 0 Z"></path> -->
+          <!-- <line x1="200" y1="0" x2="150" y2="0"></line> -->
+        </g>
+      </svg>
+      <div id="locations"></div>
+    </div>
+  </div>
+</body>
+</html>
