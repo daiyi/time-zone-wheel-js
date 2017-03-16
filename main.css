@@ -44,9 +44,11 @@ html, body {
     #wheel-box #wheel text {
       text-anchor: middle;
       fill: #ccc; }
-  #wheel-box #wheel-locations text {
-    text-anchor: start;
-    fill: #ccc; }
+  #wheel-box #wheel-locations {
+    transition: all 0.2s linear; }
+    #wheel-box #wheel-locations text {
+      text-anchor: start;
+      fill: #ccc; }
   #wheel-box svg {
     position: absolute;
     top: 0;

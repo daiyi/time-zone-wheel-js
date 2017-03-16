@@ -153,15 +153,34 @@ function addLocationToWheel(locObj, r) {
     var timelabel = document.querySelector('#wheel-locations .location-' + hourOffset)
     timelabel.innerHTML += ' & ' + locObj.label
   }
+  // add to new time slot!
   else {
     locations[hourOffset] = {
       labels: [locObj.label]
     }
+
     var text = getLocationTextSVG(hourOffset, r)
     text.innerHTML = locObj.label
     locationBox.appendChild(text)
+
+    // todo
+    // var box = getLocationBox(hourOffset, r-80)
+    // locationBox.insertBefore(box, text);
   }
 
+}
+
+
+function getPointOnWheel(r, theta) {
+  // multiply y coords by -1 to flip y-axis upright, so that up (north) is positive
+  return {
+    x: ((r) * Math.sin(theta)),
+    y: ((r) * Math.cos(theta) * -1)
+  }
+}
+
+function getThetaFromHour(hour) {
+  return hour * 2*Math.PI/clockWedges;
 }
 
 function getLocationTextSVG(hour, r) {
@@ -179,16 +198,23 @@ function getLocationTextSVG(hour, r) {
   return text
 }
 
-function getPointOnWheel(r, theta) {
-  // multiply y coords by -1 to flip y-axis upright, so that up (north) is positive
-  return {
-    x: ((r) * Math.sin(theta)),
-    y: ((r) * Math.cos(theta) * -1)
-  }
-}
+function getLocationBox(hour, r) {
+  var theta = getThetaFromHour(hour);
+  // offset text rotation by 90 deg, because we want upright text to start from
+  // due east
+  var thetaDeg = (theta - Math.PI/2) * (180/Math.PI);
+  var p = getPointOnWheel(r, theta)
 
-function getThetaFromHour(hour) {
-  return hour * 2*Math.PI/clockWedges;
+  var box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
+  box.setAttribute('x', p.x)
+  box.setAttribute('y', p.y)
+  box.setAttribute("width", 200);
+  box.setAttribute("height", '15px');
+  box.setAttribute('class', 'location location-' + hour)
+  box.setAttribute("fill", 'rgba(0,0,0,0.5)');
+  box.setAttribute('transform', 'rotate(' + thetaDeg + ' ' + p.x + ' ' + p.y + ')')
+
+  return box
 }
 
 

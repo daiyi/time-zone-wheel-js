@@ -24,13 +24,22 @@
                     r="130"
                     stroke="white" stroke-width="100"></circle>
           </mask>
+          <mask id="doughnut-hole">
+              <circle cx="0"
+                      cy="0"
+                      r="300"
+                      fill="white"></circle>
+              <circle cx="0"
+                      cy="0"
+                      r="80"
+                      fill="black"></circle>
+          </mask>
         </defs>
         <g id="wheel" mask="url(#doughnut)">
         </g>
-        <g id="wheel-locations">
+        <g id="wheel-locations" mask="url(#doughnut-hole)">
         </g>
       </svg>
-      <div id="locations"></div>
     </div>
     <form id="form-add-location">
       <div class="form-group">

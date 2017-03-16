@@ -67,6 +67,7 @@ html, body {
   }
 
   #wheel-locations {
+    transition: all 0.2s linear;
     text {
       text-anchor: start;
       fill: $white;
