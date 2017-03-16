@@ -41,13 +41,16 @@ html, body {
         fill: rgba(90, 0, 0, 0.4); }
       #wheel-box #wheel path.social-hours {
         fill: rgba(180, 204, 5, 0.3); }
+    #wheel-box #wheel text {
+      text-anchor: middle;
+      fill: #ccc; }
+  #wheel-box #wheel-locations text {
+    text-anchor: start;
+    fill: #ccc; }
   #wheel-box svg {
     position: absolute;
     top: 0;
     left: 0; }
-  #wheel-box text {
-    text-anchor: middle;
-    fill: #ccc; }
 
 #locations {
   position: relative;

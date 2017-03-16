@@ -1,5 +1,5 @@
 var clockWedges = 24;
-var radius = 150
+var RADIUS = 150
 var locations = {}
 var timeSlices = [
   {
@@ -34,11 +34,12 @@ document.addEventListener("DOMContentLoaded", function(e) {
   var page = document.getElementById('page')
   var wheelbox = document.getElementById('wheel-box')
   var wheel = document.getElementById('wheel')
-  var r = radius
+  var r = RADIUS
 
 
+  // todo
   timeSlices.forEach(function (slice) {
-    r = radius-10
+    r = RADIUS-10
 
     var x1 = Math.floor(r * Math.sin(slice.start * -2 * Math.PI/clockWedges + Math.PI + 3/clockWedges));
     var y1 = Math.floor(r * Math.cos(slice.start * -2 * Math.PI/clockWedges + Math.PI + 3/clockWedges));
@@ -57,53 +58,41 @@ document.addEventListener("DOMContentLoaded", function(e) {
   })
 
   for (var i=0; i < clockWedges; i++) {
-    var theta = i * 2*Math.PI/clockWedges;
+    var theta = getThetaFromHour(i);
     // offset text rotation by 90 deg, because we want upright text to start from
     // due east
     var thetaDeg = (theta - Math.PI/2) * (180/Math.PI);
-    r = radius
-
-    // multiply y coords by -1 to flip y-axis so up (north) is positive
-    var x = Math.floor((r-40) * Math.sin(theta));
-    var y = Math.floor((r-40) * Math.cos(theta)) * -1;
-    var x1 = Math.floor(r * Math.sin(theta));
-    var y1 = Math.floor(r * Math.cos(theta)) * -1;
-    var x2 = Math.floor((r-20) * Math.sin(theta));
-    var y2 = Math.floor((r-20) * Math.cos(theta)) * -1;
+    var p1 = getPointOnWheel(RADIUS-40, theta)
+    var p2 = getPointOnWheel(RADIUS-20, theta)
+    var p3 = getPointOnWheel(RADIUS, theta)
 
     var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
-    // console.log(line);
-    line.setAttribute('x1', x1)
-    line.setAttribute('y1', y1)
-    line.setAttribute('x2', x2)
-    line.setAttribute('y2', y2)
+    line.setAttribute('x1', p2.x)
+    line.setAttribute('y1', p2.y)
+    line.setAttribute('x2', p3.x)
+    line.setAttribute('y2', p3.y)
     wheel.appendChild(line)
 
-    var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    text.setAttribute('x', x1)
-    text.setAttribute('y', y1)
-    text.innerHTML = (' '+thetaDeg).slice(0, 6)
-    text.setAttribute('transform', 'rotate(' + thetaDeg + ' ' + x1 + ' ' + y1 + ')')
-    wheel.appendChild(text)
+    // var text = getLocationTextSVG(i, RADIUS)
+    // text.innerHTML = (' '+thetaDeg).slice(0, 6)
+    // wheel.appendChild(text)
 
     var clockHour = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    clockHour.setAttribute('x', x)
-    clockHour.setAttribute('y', y)
+    clockHour.setAttribute('x', p1.x)
+    clockHour.setAttribute('y', p1.y)
     clockHour.innerHTML = i
     wheel.appendChild(clockHour)
   }
 
-  // // add default location
-  // addLocation({ label: 'you, right now.', utc: null }, radius-15)
+  // add default location
+  addLocationToWheel({ label: 'you, right now.', utc: null }, RADIUS)
   // // add some examples
-  // addLocation({ label: 'berlin.', utc: 2-1 }, radius-15)
-  // addLocation({ label: 'san francisco.', utc: -8+1 }, radius-15)
+  addLocationToWheel({ label: 'berlin.', utc: 2-1 }, RADIUS)
+  addLocationToWheel({ label: 'san francisco.', utc: -8+1 }, RADIUS)
 
   // add event listeners
   document.getElementById('button-add-location').addEventListener('click', processNewLocation)
 });
-
-
 
 function rotateTimewheel(e) {
   var wheel = document.getElementById('wheel')
@@ -132,10 +121,10 @@ function processNewLocation(e) {
   var labelDST = document.getElementById('input-timezone-dst')
 
   if (utcForm && utcForm.value && labelForm) {
-    addLocation({
+    addLocationToWheel({
       label: labelForm.value  || utcForm.selectedOptions[0].innerHTML,
       utc: Number(utcForm.value) + labelDST.checked
-    }, radius-15)
+    }, RADIUS)
 
     // clear form
     labelForm.value = ''
@@ -145,48 +134,61 @@ function processNewLocation(e) {
   }
 }
 
+// this adds an svg text to the DOM.
 // loc is an object of shape:
 // { labels: array(<string>), utc: int }
-// r is the radius
-function addLocation(loc, r) {
+// r is the RADIUS
+function addLocationToWheel(locObj, r) {
   var date = new Date()
-  if (loc.utc) {
+  if (locObj.utc) {
 
   }
 
-  var locationbox = document.getElementById('locations')
-  var location = document.createElement('div');
-  var hourOffset = loc.utc? ((loc.utc + date.getUTCHours() + 24) % 24) : date.getHours()
+  var locationBox = document.getElementById('wheel-locations')
+  var hourOffset = locObj.utc? ((locObj.utc + date.getUTCHours() + 24) % 24) : date.getHours()
 
+  // already a label in this time slot
   if (locations[hourOffset]) {
-    locations[hourOffset]['labels'].push(loc.label)
-    var timelabel = document.querySelector('#locations .location-' + hourOffset)
-    timelabel.innerHTML += ' & ' + loc.label
+    locations[hourOffset]['labels'].push(locObj.label)
+    var timelabel = document.querySelector('#wheel-locations .location-' + hourOffset)
+    timelabel.innerHTML += ' & ' + locObj.label
   }
   else {
     locations[hourOffset] = {
-      labels: [loc.label]
+      labels: [locObj.label]
     }
-
-    // subtract Math.PI/2 to start 0th utc at top
-    var theta = 2*Math.PI/clockWedges*hourOffset - Math.PI/2;
-    theta = theta % (Math.PI*2);
-    var x = r * Math.sin(theta);
-    var y = r * Math.cos(theta);
-    location.innerHTML = loc.label
-    location.setAttribute('class', 'location location-' + hourOffset)
-    location.style.top = x + 'px'
-    location.style.left = y + 'px'
-
-    // correct for words being upside down if on left side
-    // TODO
-    // if (theta > Math.PI + Math.PI/2) {
-    //   theta = theta - Math.PI
-    // }
-    location.style.transform = 'rotateZ(' + theta + 'rad)'
-
-    locationbox.appendChild(location)
+    var text = getLocationTextSVG(hourOffset, r)
+    text.innerHTML = locObj.label
+    locationBox.appendChild(text)
   }
+
+}
+
+function getLocationTextSVG(hour, r) {
+  var theta = getThetaFromHour(hour);
+  // offset text rotation by 90 deg, because we want upright text to start from
+  // due east
+  var thetaDeg = (theta - Math.PI/2) * (180/Math.PI);
+  var p = getPointOnWheel(r, theta)
+
+  var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+  text.setAttribute('x', p.x)
+  text.setAttribute('y', p.y)
+  text.setAttribute('class', 'location location-' + hour)
+  text.setAttribute('transform', 'rotate(' + thetaDeg + ' ' + p.x + ' ' + p.y + ')')
+  return text
+}
+
+function getPointOnWheel(r, theta) {
+  // multiply y coords by -1 to flip y-axis upright, so that up (north) is positive
+  return {
+    x: ((r) * Math.sin(theta)),
+    y: ((r) * Math.cos(theta) * -1)
+  }
+}
+
+function getThetaFromHour(hour) {
+  return hour * 2*Math.PI/clockWedges;
 }
 
 

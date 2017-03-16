@@ -59,6 +59,18 @@ html, body {
         fill: rgba(180, 204, 5, 0.3);
       }
     }
+
+    text {
+      text-anchor: middle;
+      fill: $white;
+    }
+  }
+
+  #wheel-locations {
+    text {
+      text-anchor: start;
+      fill: $white;
+    }
   }
   svg {
     position: absolute;
@@ -66,10 +78,6 @@ html, body {
     left: 0;
   }
 
-  text {
-    text-anchor: middle;
-    fill: $white;
-  }
 }
 
 #locations {
