@@ -1,6 +1,34 @@
 var clockWedges = 24;
 var radius = 150
 var locations = {}
+var timeSlices = [
+  {
+    className: 'awake-hours',
+    start: 7,
+    end: 23
+  },
+  {
+    className: 'work-hours',
+    start: 9,
+    end: 17
+  },
+  {
+    className: 'social-hours',
+    start: 8,
+    end: 22
+  }
+]
+
+// q: daiyi why are you writing in es-ancient??
+// a: Well it's kind of like sometimes when you have the urge to put on a suit of
+//    armour and do battle for your honor on a noble steed.
+//    Nostalgia isn't quit the word and neither is masochism.
+//    I did submit this to RC as a no-frameworks challenge so I won't slap
+//    react on this until after they see it anyway :P
+
+// note to self: this circle math is super messed up, because of the way the
+// svg coordinate system is (up is -y instead of y)
+// todo: fix circle math
 
 document.addEventListener("DOMContentLoaded", function(e) {
   var page = document.getElementById('page')
@@ -8,23 +36,6 @@ document.addEventListener("DOMContentLoaded", function(e) {
   var wheel = document.getElementById('wheel')
   var r = radius
 
-  var timeSlices = [
-    {
-      className: 'awake-hours',
-      start: 7,
-      end: 23
-    },
-    {
-      className: 'work-hours',
-      start: 9,
-      end: 17
-    },
-    {
-      className: 'social-hours',
-      start: 8,
-      end: 22
-    }
-  ]
 
   timeSlices.forEach(function (slice) {
     r = radius-10
@@ -46,35 +57,47 @@ document.addEventListener("DOMContentLoaded", function(e) {
   })
 
   for (var i=0; i < clockWedges; i++) {
+    var theta = i * 2*Math.PI/clockWedges;
+    // offset text rotation by 90 deg, because we want upright text to start from
+    // due east
+    var thetaDeg = (theta - Math.PI/2) * (180/Math.PI);
     r = radius
-    var theta = i * -2*Math.PI/clockWedges + Math.PI;
+
+    // multiply y coords by -1 to flip y-axis so up (north) is positive
     var x = Math.floor((r-40) * Math.sin(theta));
-    var y = Math.floor((r-40) * Math.cos(theta));
+    var y = Math.floor((r-40) * Math.cos(theta)) * -1;
     var x1 = Math.floor(r * Math.sin(theta));
-    var y1 = Math.floor(r * Math.cos(theta));
+    var y1 = Math.floor(r * Math.cos(theta)) * -1;
     var x2 = Math.floor((r-20) * Math.sin(theta));
-    var y2 = Math.floor((r-20) * Math.cos(theta));
+    var y2 = Math.floor((r-20) * Math.cos(theta)) * -1;
+
     var line = document.createElementNS("http://www.w3.org/2000/svg", "line");
     // console.log(line);
     line.setAttribute('x1', x1)
     line.setAttribute('y1', y1)
     line.setAttribute('x2', x2)
     line.setAttribute('y2', y2)
+    wheel.appendChild(line)
 
-    var hourText = document.createElementNS("http://www.w3.org/2000/svg", "text");
-    hourText.setAttribute('x', x)
-    hourText.setAttribute('y', y)
-    hourText.innerHTML = i
+    var text = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    text.setAttribute('x', x1)
+    text.setAttribute('y', y1)
+    text.innerHTML = (' '+thetaDeg).slice(0, 6)
+    text.setAttribute('transform', 'rotate(' + thetaDeg + ' ' + x1 + ' ' + y1 + ')')
+    wheel.appendChild(text)
 
-    // wheel.appendChild(line)
-    wheel.appendChild(hourText)
+    var clockHour = document.createElementNS("http://www.w3.org/2000/svg", "text");
+    clockHour.setAttribute('x', x)
+    clockHour.setAttribute('y', y)
+    clockHour.innerHTML = i
+    wheel.appendChild(clockHour)
   }
 
-  // add default location
-  addLocation({ label: 'you, right now.', utc: null }, radius-15)
-  // add some examples
-  addLocation({ label: 'berlin.', utc: 2-1 }, radius-15)
-  addLocation({ label: 'san francisco.', utc: -8+1 }, radius-15)
+  // // add default location
+  // addLocation({ label: 'you, right now.', utc: null }, radius-15)
+  // // add some examples
+  // addLocation({ label: 'berlin.', utc: 2-1 }, radius-15)
+  // addLocation({ label: 'san francisco.', utc: -8+1 }, radius-15)
 
   // add event listeners
   document.getElementById('button-add-location').addEventListener('click', processNewLocation)
