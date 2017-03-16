@@ -1,12 +1,12 @@
 var clockWedges = 24;
+var radius = 150
+var locations = {}
 
 document.addEventListener("DOMContentLoaded", function(e) {
   var page = document.getElementById('page')
   var wheelbox = document.getElementById('wheel-box')
-  var locationbox = document.getElementById('locations')
   var wheel = document.getElementById('wheel')
-  var radius = 150;
-  var r = radius;
+  var r = radius
 
   var timeSlices = [
     {
@@ -70,51 +70,14 @@ document.addEventListener("DOMContentLoaded", function(e) {
     wheel.appendChild(hourText)
   }
 
-  var locations = []
-  locations = [
-    {
-      name: "berlin",
-      hour: 10
-    }
-  ]
-  locations = [
-    {
-      name: "montreal",
-      hour: 5
-    },
-    {
-      name: "san francisco",
-      hour: 2
-    },
-    {
-      name: "berlin",
-      hour: 10
-    }
-  ]
+  // add default location
+  addLocation({ label: 'you, right now.', utc: null }, radius-15)
 
-  locations.forEach(function(loc) {
-    r = radius-15
-    var location = document.createElement("div");
-
-    // subtract Math.PI/2 to start 0th hour at top
-    var theta = 2*Math.PI/clockWedges*loc.hour - Math.PI/2;
-    var x = r * Math.sin(theta);
-    var y = r * Math.cos(theta);
-    location.innerHTML = loc.name
-    location.setAttribute('class', 'location')
-    location.style.top = x
-    location.style.left = y
-
-    // correct for words being upside down if on left side
-    if (theta > Math.PI - Math.PI/2) {
-      theta = theta + Math.PI
-    }
-    location.style.transform = 'rotateZ(' + theta + 'rad)'
-
-    locationbox.appendChild(location)
-  });
-
+  // add event listeners
+  document.getElementById('button-add-location').addEventListener('click', processNewLocation)
 });
+
+
 
 function rotateTimewheel(e) {
   var wheel = document.getElementById('wheel')
@@ -135,10 +98,89 @@ function rotateTimewheel(e) {
   wheel.style.transform = 'rotateZ(' + newRads + 'rad)'
 }
 
+function processNewLocation(e) {
+  e.preventDefault()
+  var form = document.getElementById('form-add-location')
+  var utcForm = document.getElementById('input-timezone-utc')
+  var labelForm = document.getElementById('input-timezone-label')
+  var labelDST = document.getElementById('input-timezone-dst')
+
+  if (utcForm && utcForm.value && labelForm) {
+    addLocation({
+      label: labelForm.value  || utcForm.selectedOptions[0].innerHTML,
+      utc: Number(utcForm.value) + labelDST.checked
+    }, radius-15)
+
+    // clear form
+    labelForm.value = ''
+  }
+  else {
+    console.log('nope');
+  }
+}
+
+// loc is an object of shape:
+// { labels: array(<string>), utc: int }
+// r is the radius
+function addLocation(loc, r) {
+  var date = new Date()
+  if (loc.utc) {
+
+  }
+
+  var locationbox = document.getElementById('locations')
+  var location = document.createElement('div');
+  var hourOffset = loc.utc? ((loc.utc + date.getUTCHours() + 24) % 24) : date.getHours()
+
+  if (locations[hourOffset]) {
+    locations[hourOffset]['labels'].push(loc.label)
+    var timelabel = document.querySelector('#locations .location-' + hourOffset)
+    timelabel.innerHTML += ' & ' + loc.label
+  }
+  else {
+    locations[hourOffset] = {
+      labels: [loc.label]
+    }
+    
+    // subtract Math.PI/2 to start 0th utc at top
+    var theta = 2*Math.PI/clockWedges*hourOffset - Math.PI/2;
+    theta = theta % (Math.PI*2);
+    var x = r * Math.sin(theta);
+    var y = r * Math.cos(theta);
+    location.innerHTML = loc.label
+    location.setAttribute('class', 'location location-' + hourOffset)
+    location.style.top = x + 'px'
+    location.style.left = y + 'px'
+
+    // correct for words being upside down if on left side
+    // TODO
+    // if (theta > Math.PI + Math.PI/2) {
+    //   theta = theta - Math.PI
+    // }
+    location.style.transform = 'rotateZ(' + theta + 'rad)'
+
+    locationbox.appendChild(location)
+  }
+}
+
+
+// todo eventhandler on dom labels
+function removeLocation(locKey) {
+  var timelabel = document.querySelector('#locations .location-' + locKey)
+
+  // remove from data structure
+  locations[locKey].slice(locations[locKey].indexOf(timelabel.innerHTML), 1)
+
+  // remove from dom
+  timelabel.parentNode().removeChild(timeLabel)
+}
+
+// todo localstorage
+
+
 document.addEventListener("keydown", function (e) {
     throttle(rotateTimewheel, e);
 }, false);
-
 
 var throttle = (function () {
   var timeWindow = 200; // time in ms

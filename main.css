@@ -63,3 +63,11 @@ html, body {
     position: absolute; }
     #locations .location:before {
       content: '— '; }
+
+form .form-group {
+  display: inline-block; }
+
+a, a:visited, a:hover {
+  color: #ccc;
+  text-decoration: none;
+  border-bottom: 1px dotted #ccc; }

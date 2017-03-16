@@ -8,11 +8,12 @@
 
 <body>
   <div id="page">
+    <h3>timezone converter wheel</h3>
     <p><em>use arrow keys to spin the wheel of time.</em></p>
-    <p>
+    <p style="color: #999">
       a more visual way of doing timezone conversions <br />
       and mess around for a time when everyone is awake.</p>
-    <p style="color: #888">help wanted: a less miserable way to manipulate svg with js</p>
+    <p style="color: #999">excuse the mess, work in progress. | <a href="https://github.com/daiyi/time-zone-wheel">github</a>
 
     <div id="wheel-box">
       <svg viewBox="-300 -300 600 600">
@@ -24,21 +25,61 @@
                     stroke="white" stroke-width="100"></circle>
           </mask>
         </defs>
-        <!-- <g id="wheel"> -->
         <g id="wheel" mask="url(#doughnut)">
-          <!-- <path d="M 200 0
-                  A 200 200, 0, 0, 1, 373.2 100
-                  L 200 200
-                  Z"
-               fill="#27e10e"></path> -->
-
-          <!-- <path d="M 0 200 L 0 0 Z"></path>
-          <path d="M 200 0 L 0 0 Z"></path> -->
-          <!-- <line x1="200" y1="0" x2="150" y2="0"></line> -->
         </g>
       </svg>
       <div id="locations"></div>
     </div>
-  </div>
+    <form id="form-add-location">
+      <div class="form-group">
+        <label for="input-timezone-utc" hidden="true">
+          timezone
+        </label>
+        <select type="select" id="input-timezone-utc">
+          <option value="-14">UTC-14</option>
+          <option value="-13">UTC-13</option>
+          <option value="-12">UTC-12</option>
+          <option value="-11">UTC-11</option>
+          <option value="-10">UTC-10</option>
+          <option value="-9">UTC-9</option>
+          <option value="-8">UTC-8</option>
+          <option value="-7">UTC-7</option>
+          <option value="-6">UTC-6</option>
+          <option value="-5" selected="true">UTC-5</option>
+          <option value="-4">UTC-4</option>
+          <option value="-3">UTC-3</option>
+          <option value="-2">UTC-2</option>
+          <option value="-1">UTC-1</option>
+          <option value="+0">UTC+0</option>
+          <option value="+1">UTC+1</option>
+          <option value="+2">UTC+2</option>
+          <option value="+3">UTC+3</option>
+          <option value="+4">UTC+4</option>
+          <option value="+5">UTC+5</option>
+          <option value="+6">UTC+6</option>
+          <option value="+7">UTC+7</option>
+          <option value="+8">UTC+8</option>
+          <option value="+9">UTC+9</option>
+          <option value="+10">UTC+10</option>
+          <option value="+11">UTC+11</option>
+          <option value="+12">UTC+12</option>
+          <option value="+13">UTC+13</option>
+          <option value="+14">UTC+14</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="input-timezone-label" hidden="true">label</label>
+        <input placeholder="brooklyn" id="input-timezone-label" type="text"></input>
+      </div>
+      <div class="form-group">
+        <button class="button-submit" id="button-add-location">add</button>
+      </div>
+    </form>
+    <form>
+      <div class="form-group">
+        <input checked="true" id="input-timezone-dst" type="checkbox"></input>
+        <label for="input-timezone-dst">daylight savings?</label>
+      </div>
+    </form>
 </body>
 </html>
