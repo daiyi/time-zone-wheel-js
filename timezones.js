@@ -72,6 +72,9 @@ document.addEventListener("DOMContentLoaded", function(e) {
 
   // add default location
   addLocation({ label: 'you, right now.', utc: null }, radius-15)
+  // add some examples
+  addLocation({ label: 'berlin.', utc: 2-1 }, radius-15)
+  addLocation({ label: 'san francisco.', utc: -8+1 }, radius-15)
 
   // add event listeners
   document.getElementById('button-add-location').addEventListener('click', processNewLocation)
@@ -141,7 +144,7 @@ function addLocation(loc, r) {
     locations[hourOffset] = {
       labels: [loc.label]
     }
-    
+
     // subtract Math.PI/2 to start 0th utc at top
     var theta = 2*Math.PI/clockWedges*hourOffset - Math.PI/2;
     theta = theta % (Math.PI*2);
