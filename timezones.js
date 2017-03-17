@@ -95,7 +95,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 });
 
 function rotateTimewheel(e) {
-  var wheel = document.getElementById('wheel')
+  var wheel = document.getElementById('wheel-locations')
   var reg = /rotateZ\((.*)rad\)/g;
   var regMatches = reg.exec(wheel.style.transform)
   var rads = regMatches? Number(regMatches[1]) : 0
@@ -208,7 +208,7 @@ function getLocationBox(hour, r) {
   var box = document.createElementNS("http://www.w3.org/2000/svg", "rect");
   box.setAttribute('x', p.x)
   box.setAttribute('y', p.y)
-  box.setAttribute("width", 200);
+  box.setAttribute("width", '200px');
   box.setAttribute("height", '15px');
   box.setAttribute('class', 'location location-' + hour)
   box.setAttribute("fill", 'rgba(0,0,0,0.5)');
