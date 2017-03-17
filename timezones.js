@@ -22,7 +22,7 @@ var timeSlices = [
 // q: daiyi why are you writing in es-ancient??
 // a: Well it's kind of like sometimes when you have the urge to put on a suit of
 //    armour and do battle for your honor on a noble steed.
-//    Nostalgia isn't quit the word and neither is masochism.
+//    Nostalgia isn't quite the word and neither is masochism.
 //    I did submit this to RC as a no-frameworks challenge so I won't slap
 //    react on this until after they see it anyway :P
 
