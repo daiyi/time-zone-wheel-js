@@ -26,9 +26,6 @@ var timeSlices = [
 //    I did submit this to RC as a no-frameworks challenge so I won't slap
 //    react on this until after they see it anyway :P
 
-// note to self: this circle math is super messed up, because of the way the
-// svg coordinate system is (up is -y instead of y)
-// todo: fix circle math
 
 document.addEventListener("DOMContentLoaded", function(e) {
   var page = document.getElementById('page')
