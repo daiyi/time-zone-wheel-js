@@ -112,3 +112,56 @@ a, a:visited, a:hover {
   text-decoration: none;
   border-bottom: 1px dotted $white;
 }
+
+
+
+input,
+select,
+button,
+textarea
+{
+	margin: 0;
+	border: 0;
+	padding: 0;
+	display: inline-block;
+	vertical-align: middle;
+	white-space: normal;
+	background: none;
+	line-height: 1;
+
+	font-size: 13px;
+	font-family: monospace;
+}
+
+form {
+  input, textarea, select {
+     background-color: #555;
+     border: none;
+     color: #FFFFFF;
+  }
+  input {
+    padding: 5px;
+  }
+  select {
+    padding: 3px;
+  }
+
+  label {
+     color: #AAAAAA;
+     padding-top: 0px;
+     padding-bottom: 0px;
+  }
+
+  button.button-submit {
+    background-color: #222222;
+    border: solid 1px #999999;
+    color: #CCCCCC;
+    padding:  3px 10px;
+    -moz-border-radius: 0px;
+    -webkit-border-radius: 0px;
+    border-radius: 0px;
+
+     margin-top: 0px;
+     margin-bottom: 0px;
+  }
+}

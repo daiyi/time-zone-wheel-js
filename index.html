@@ -16,7 +16,7 @@
     <p style="color: #999">excuse the mess, work in progress. | <a href="https://github.com/daiyi/time-zone-wheel">github</a>
 
     <div id="wheel-box">
-      <svg viewBox="-300 -300 600 600">
+      <svg viewBox="-300 -300 600 600" preserveAspectRatio="xMidYMid meet">
         <defs>
           <mask id="doughnut">
             <circle cx="0"
@@ -26,10 +26,10 @@
           </mask>
           <mask id="doughnut-hole">
               <rect x="-300"
-                      y="-300"
-                      width="900px"
-                      height="900px"
-                      fill="white"></rect>
+                    y="-300"
+                    width="900px"
+                    height="900px"
+                    fill="white"></rect>
               <circle cx="0"
                       cy="0"
                       r="80"
@@ -81,7 +81,7 @@
       </div>
       <div class="form-group">
         <label for="input-timezone-label" hidden="true">label</label>
-        <input placeholder="brooklyn" id="input-timezone-label" type="text"></input>
+        <input placeholder="label" id="input-timezone-label" type="text"></input>
       </div>
       <div class="form-group">
         <button class="button-submit" id="button-add-location">add</button>
