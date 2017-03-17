@@ -92,7 +92,7 @@ document.addEventListener("DOMContentLoaded", function(e) {
 });
 
 function rotateTimewheel(e) {
-  var wheel = document.getElementById('wheel-locations')
+  var wheel = document.getElementById('wheel')
   var reg = /rotateZ\((.*)rad\)/g;
   var regMatches = reg.exec(wheel.style.transform)
   var rads = regMatches? Number(regMatches[1]) : 0
